@@ -17,10 +17,17 @@ CREATE TABLE categorias (
 //crie a tabela produtos com os campos id, nome, descricao e preco
 CREATE TABLE produtos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
-    descricao TEXT NOT NULL,
-    preco DECIMAL(10,2) NOT NULL,
+    vcompra REAL NOT NULL,
+    vvenda REAL NOT NULL,
+    refrig BOOLEAN NOT NULL,
+    descricao VARCHAR (50) NOT NULL,
+    nome VARCHAR (30) NOT NULL,
+    lote INT NOT NULL,
+    datavali DATE NOT NULL,
+    marca VARCHAR (30) NOT NULL,
+    indicacao VARCHAR (50) NOT NULL,
+    restricoes VARCHAR (100) NOT NULL,
     quantidade INT NOT NULL,
-    categoria INT NOT NULL,
-    FOREIGN KEY (categoria) REFERENCES categorias(id)
+    observacoes VARCHAR (150) NOT NULL,
+    foto BLOB NOT NULL,
 );
