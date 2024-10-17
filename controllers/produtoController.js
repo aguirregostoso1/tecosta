@@ -1,114 +1,105 @@
+// controllers/produtoController.js
+
 const Produto = require('../models/produtoModel');
-const Categoria = require('../models/categoriaModel');
 
 const produtoController = {
+    createProduto: async (req, res) => {
+        try {
+            const newProduto = {
+                vcompra: req.body.vcompra,
+                vvenda: req.body.vvenda,
+                refrig: req.body.refrig,
+                descricao: req.body.descricao,
+                nome: req.body.nome,
+                lote: req.body.lote,
+                datavali: req.body.datavali,
+                marca: req.body.marca,
+                indicacao: req.body.indicacao,
+                restricoes: req.body.restricoes,
+                quantidade: req.body.quantidade,
+                observacoes: req.body.observacoes,
+                foto: req.body.foto,
+            };
 
-    createProduto: (req, res) => {
-
-        const newProduto = {
-            nome: req.body.nome,
-            descricao: req.body.descricao,
-            preco: req.body.preco,
-            quantidade: req.body.quantidade,
-            categoria: req.body.categoria
-        };
-
-        Produto.create(newProduto, (err, produtoId) => {
-            if (err) {
-                return res.status(500).json({ error: err });
-            }
-            res.redirect('/produtos');
-        });
+            const produto = await Produto.create(newProduto);
+            res.status(201).json(produto);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     },
 
-    getProdutoById: (req, res) => {
-        const produtoId = req.params.id;
+    getProdutoById: async (req, res) => {
+        try {
+            const produtoId = req.params.id;
+            const produto = await Produto.findByPk(produtoId);
 
-        Produto.findById(produtoId, (err, produto) => {
-            if (err) {
-                return res.status(500).json({ error: err });
-            }
             if (!produto) {
-                return res.status(404).json({ message: 'Produto not found' });
+                return res.status(404).json({ message: 'Produto não encontrado' });
             }
-            res.render('produtos/show', { produto });
-        });
+            res.status(200).json(produto);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     },
-    
-    getAllProdutos: (req, res) => {
-        const categoria = req.query.categoria || null;
-        
-        Produto.getAll(categoria, (err, produtos) => {
-            if (err) {
-                return res.status(500).json({ error: err });
-            }
-            Categoria.getAll((err, categorias) => {
-                if (err) {
-                    return res.status(500).json({ error: err });
-                }
-                res.render('produtos/index', { produtos, categorias, categoriaSelecionada: categoria });
+
+    getAllProdutos: async (req, res) => {
+        try {
+            const produtos = await Produto.findAll();
+            res.status(200).json(produtos);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    updateProduto: async (req, res) => {
+        try {
+            const produtoId = req.params.id;
+            const updatedProduto = {
+                vcompra: req.body.vcompra,
+                vvenda: req.body.vvenda,
+                refrig: req.body.refrig,
+                descricao: req.body.descricao,
+                nome: req.body.nome,
+                lote: req.body.lote,
+                datavali: req.body.datavali,
+                marca: req.body.marca,
+                indicacao: req.body.indicacao,
+                restricoes: req.body.restricoes,
+                quantidade: req.body.quantidade,
+                observacoes: req.body.observacoes,
+                foto: req.body.foto,
+            };
+
+            const [updated] = await Produto.update(updatedProduto, {
+                where: { id: produtoId },
             });
-        });
+
+            if (!updated) {
+                return res.status(404).json({ message: 'Produto não encontrado' });
+            }
+            const produto = await Produto.findByPk(produtoId);
+            res.status(200).json(produto);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     },
 
-    renderCreateForm: (req, res) => {
-        Categoria.getAll((err, categorias) => {
-            if (err) {
-                return res.status(500).json({ error: err });
-            }
-            res.render('produtos/create', { categorias });
-        });
-    },
+    deleteProduto: async (req, res) => {
+        try {
+            const produtoId = req.params.id;
 
-    renderEditForm: (req, res) => {
-        const produtoId = req.params.id;
-
-        Produto.findById(produtoId, (err, produto) => {
-            if (err) {
-                return res.status(500).json({ error: err });
-            }
-            if (!produto) {
-                return res.status(404).json({ message: 'Produto not found' });
-            }
-
-            Categoria.getAll((err, categorias) => {
-                if (err) {
-                    return res.status(500).json({ error: err });
-                }
-                res.render('produtos/edit', { produto, categorias });
+            const deleted = await Produto.destroy({
+                where: { id: produtoId },
             });
-        });
-    },
 
-    updateProduto: (req, res) => {
-        const produtoId = req.params.id;
-        
-        const updatedProduto = {
-            nome: req.body.nome,
-            descricao: req.body.descricao,
-            preco: req.body.preco,
-            quantidade: req.body.quantidade,
-            categoria: req.body.categoria
-        };
-
-        Produto.update(produtoId, updatedProduto, (err) => {
-            if (err) {
-                return res.status(500).json({ error: err });
+            if (!deleted) {
+                return res.status(404).json({ message: 'Produto não encontrado' });
             }
-            res.redirect('/produtos');
-        });
+            res.status(204).send();
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     },
-
-    deleteProduto: (req, res) => {
-        const produtoId = req.params.id;
-
-        Produto.delete(produtoId, (err) => {
-            if (err) {
-                return res.status(500).json({ error: err });
-            }
-            res.redirect('/produtos');
-        });
-    }
 };
 
 module.exports = produtoController;

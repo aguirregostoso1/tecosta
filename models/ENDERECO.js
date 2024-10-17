@@ -1,9 +1,9 @@
 const db = require('../config/db');
 
-const User = {
+const ENDERECO = {
     create: (user, callback) => {
-        const query = 'INSERT INTO users (username, password, role) VALUES (?, ?, ?)';
-        db.query(query, [user.username, user.password, user.role], (err, results) => {
+        const query = 'INSERT INTO users (descricao, codatend, codproduto) VALUES (?, ?, ?)';
+        db.query(query, [ENDERECO.rua, ENDERECO.numero, ENDERECO.bairro, ENDERECO.cidade, ENDERECO.uf, ENDERECO.cep,], (err, results) => {
             if (err) {
                 return callback(err);
             }
@@ -21,19 +21,12 @@ const User = {
         });
     },
 
-    findByUsername: (username, callback) => {
-        const query = 'SELECT * FROM users WHERE username = ?';
-        db.query(query, [username], (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results[0]);
-        });
-    },
+ 
+
 
     update: (id, user, callback) => {
-        const query = 'UPDATE users SET username = ?, password = ?, role = ? WHERE id = ?';
-        db.query(query, [user.username, user.password, user.role, id], (err, results) => {
+        const query = 'INSERT INTO users (descricao, codatend, codproduto) VALUES (?, ?, ?)';
+        db.query(query, [ENDERECO.rua, ENDERECO.numero, ENDERECO.bairro, ENDERECO.cidade, ENDERECO.uf, ENDERECO.cep,], (err, results) => {
             if (err) {
                 return callback(err);
             }
@@ -72,4 +65,4 @@ const User = {
     },    
 };
 
-module.exports = User;
+module.exports = ENDERECO;

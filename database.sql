@@ -33,7 +33,7 @@ CREATE TABLE profissional (
   codgenero foreign KEY NOT NULL,
   fone int not null,
   email VARCHAR(50) not null,
-  ENDERECO INT NOT NULL,
+  endereco INT NOT NULL,
   codeesp int not null
 
 );
@@ -54,7 +54,7 @@ nome VARCHAR(50) NOT NULL,
 cpf char(14) NOT NULL,
 datanasc DATE not null,
 codgenero int not null, 
-ENDERECO INT NOT NULL,
+endereco INT NOT NULL,
 codatend  int not null
 );
 CREATE TABLE atendimento (
