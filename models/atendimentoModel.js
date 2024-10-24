@@ -1,9 +1,9 @@
 const db = require('../config/db');
 
-const profissional = {
-    create: (user, callback) => {
-        const query = 'INSERT INTO users (descricao, codatend, codproduto) VALUES (?, ?, ?)';
-        db.query(query, [profissional.nome, profissional.datanasc, profissional.codgenero, profissional.fone, profissional.email, profissional.endereco, profissional.codeesp], (err, results) => {
+const Atendimento = {
+    create: (atendimento, callback) => {
+        const query = 'INSERT INTO atendimento (dia, hora, motivo, procedimento, vcobrado, formapag, codprof) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        db.query(query, [atendimento.dia, atendimento.hora, atendimento.motivo, atendimento.procedimento, atendimento.vcobrado, atendimento.formapag, atendimento.codprof], (err, results) => {
             if (err) {
                 return callback(err);
             }
@@ -12,7 +12,7 @@ const profissional = {
     },
 
     findById: (id, callback) => {
-        const query = 'SELECT * FROM users WHERE id = ?';
+        const query = 'SELECT * FROM atendimento WHERE id = ?';
         db.query(query, [id], (err, results) => {
             if (err) {
                 return callback(err);
@@ -21,12 +21,9 @@ const profissional = {
         });
     },
 
- 
-
-
-    update: (id, user, callback) => {
-        const query = 'INSERT INTO users (descricao, codatend, codproduto) VALUES (?, ?, ?)';
-        db.query(query, [profissional.nome, profissional.datanasc, profissional.codgenero, profissional.fone, profissional.email, profissional.endereco, profissional.codeesp], (err, results) => {
+    update: (id, atendimento, callback) => {
+        const query = 'UPDATE atendimento SET dia = ?, hora = ?, motivo = ?, procedimento = ?, vcobrado = ?, formapag = ?, codprof = ? WHERE id = ?';
+        db.query(query, [atendimento.dia, atendimento.hora, atendimento.motivo, atendimento.procedimento, atendimento.vcobrado, atendimento.formapag, atendimento.codprof, id], (err, results) => {
             if (err) {
                 return callback(err);
             }
@@ -35,7 +32,7 @@ const profissional = {
     },
 
     delete: (id, callback) => {
-        const query = 'DELETE FROM users WHERE id = ?';
+        const query = 'DELETE FROM atendimento WHERE id = ?';
         db.query(query, [id], (err, results) => {
             if (err) {
                 return callback(err);
@@ -45,7 +42,7 @@ const profissional = {
     },
 
     getAll: (callback) => {
-        const query = 'SELECT * FROM users';
+        const query = 'SELECT * FROM atendimento';
         db.query(query, (err, results) => {
             if (err) {
                 return callback(err);
@@ -55,14 +52,14 @@ const profissional = {
     },
 
     searchByName: (name, callback) => {
-        const query = 'SELECT * FROM users WHERE username LIKE ?';
+        const query = 'SELECT * FROM atendimento WHERE motivo LIKE ?';
         db.query(query, [`%${name}%`], (err, results) => {
             if (err) {
                 return callback(err);
             }
             callback(null, results);
         });
-    },    
+    },
 };
 
-module.exports = profissional;
+module.exports = Atendimento;

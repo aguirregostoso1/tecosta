@@ -1,61 +1,93 @@
-const db = require('../models');
-const Atendimento = db.atendimento;
+const Atendimento = require('../models/atendimentoModel');
 
-exports.getAllAtendimentos = async (req, res) => {
-    try {
-        const atendimentos = await Atendimento.findAll();
-        res.status(200).json(atendimentos);
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao obter atendimentos', error });
-    }
-};
+const atendimentoController = {
+    createAtendimento: async (req, res) => {
+        try {
+            const newAtendimento = {
+                dia: req.body.dia,
+                hora: req.body.hora,
+                motivo: req.body.motivo,
+                procedimento: req.body.procedimento,
+                vcobrado: req.body.vcobrado,
+                formapag: req.body.formapag,
+                codprof: req.body.codprof,
+            };
 
-exports.getAtendimentoById = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const atendimento = await Atendimento.findByPk(id);
-        if (!atendimento) {
-            return res.status(404).json({ message: 'Atendimento não encontrado' });
+            const atendimento = await Atendimento.create(newAtendimento);
+            res.status(201).json(atendimento);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-        res.status(200).json(atendimento);
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao obter atendimento', error });
-    }
-};
+    },
 
-exports.createAtendimento = async (req, res) => {
-    try {
-        const atendimento = await Atendimento.create(req.body);
-        res.status(201).json(atendimento);
-    } catch (error) {
-        res.status(400).json({ message: 'Erro ao criar atendimento', error });
-    }
-};
+    getAtendimentoById: async (req, res) => {
+        try {
+            const atendimentoId = req.params.id;
+            const atendimento = await Atendimento.findByPk(atendimentoId);
 
-exports.updateAtendimento = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const atendimento = await Atendimento.findByPk(id);
-        if (!atendimento) {
-            return res.status(404).json({ message: 'Atendimento não encontrado' });
+            if (!atendimento) {
+                return res.status(404).json({ message: 'Atendimento não encontrado' });
+            }
+
+            res.status(200).json(atendimento);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-        await atendimento.update(req.body);
-        res.status(200).json(atendimento);
-    } catch (error) {
-        res.status(400).json({ message: 'Erro ao atualizar atendimento', error });
-    }
+    },
+
+    getAllAtendimentos: async (req, res) => {
+        try {
+            const atendimentos = await Atendimento.findAll();
+            res.status(200).json(atendimentos);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    updateAtendimento: async (req, res) => {
+        try {
+            const atendimentoId = req.params.id;
+            const updatedAtendimento = {
+                dia: req.body.dia,
+                hora: req.body.hora,
+                motivo: req.body.motivo,
+                procedimento: req.body.procedimento,
+                vcobrado: req.body.vcobrado,
+                formapag: req.body.formapag,
+                codprof: req.body.codprof,
+            };
+
+            const [updated] = await Atendimento.update(updatedAtendimento, {
+                where: { id: atendimentoId },
+            });
+
+            if (!updated) {
+                return res.status(404).json({ message: 'Atendimento não encontrado' });
+            }
+
+            const atendimento = await Atendimento.findByPk(atendimentoId);
+            res.status(200).json(atendimento);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    deleteAtendimento: async (req, res) => {
+        try {
+            const atendimentoId = req.params.id;
+            const deleted = await Atendimento.destroy({
+                where: { id: atendimentoId },
+            });
+
+            if (!deleted) {
+                return res.status(404).json({ message: 'Atendimento não encontrado' });
+            }
+
+            res.status(204).send();
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
 };
 
-exports.deleteAtendimento = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const atendimento = await Atendimento.findByPk(id);
-        if (!atendimento) {
-            return res.status(404).json({ message: 'Atendimento não encontrado' });
-        }
-        await atendimento.destroy();
-        res.status(204).send();
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao deletar atendimento', error });
-    }
-};
+module.exports = atendimentoController;

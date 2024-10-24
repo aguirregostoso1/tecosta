@@ -1,9 +1,9 @@
 const db = require('../config/db');
 
-const cliente = {
-    create: (user, callback) => {
-        const query = 'INSERT INTO users (descricao, codatend, codproduto) VALUES (?, ?, ?)';
-        db.query(query, [cliente.nome, cliente.cpf, cliente.datanasc, cliente.codgenero, cliente.endereco, cliente.codatend,], (err, results) => {
+const usuarios = {
+    create: (usuarios, callback) => {
+        const query = 'INSERT INTO usuarios (nome, datanasc, fone, email) VALUES (?, ?, ?, ?)';
+        db.query(query, [usuarios.nome,  usuarios.fone, usuarios.email,usuarios.datanasc ], (err, results) => {
             if (err) {
                 return callback(err);
             }
@@ -12,7 +12,7 @@ const cliente = {
     },
 
     findById: (id, callback) => {
-        const query = 'SELECT * FROM users WHERE id = ?';
+        const query = 'SELECT * FROM usuarios WHERE id = ?';
         db.query(query, [id], (err, results) => {
             if (err) {
                 return callback(err);
@@ -21,12 +21,9 @@ const cliente = {
         });
     },
 
- 
-
-
-    update: (id, user, callback) => {
-        const query = 'INSERT INTO users (descricao, codatend, codproduto) VALUES (?, ?, ?)';
-        db.query(query, [cliente.nome, cliente.cpf, cliente.datanasc, cliente.codgenero, cliente.endereco, cliente.codatend,], (err, results) => {
+    update: (id, usuarios, callback) => {
+        const query = 'UPDATE usuarios SET nome = ?, datanasc = ?, fone = ?, email = ?, WHERE id = ?';
+        db.query(query, [usuarios.nome,  usuarios.fone, usuarios.email,usuarios.datanasc ], (err, results) => {
             if (err) {
                 return callback(err);
             }
@@ -35,7 +32,7 @@ const cliente = {
     },
 
     delete: (id, callback) => {
-        const query = 'DELETE FROM users WHERE id = ?';
+        const query = 'DELETE FROM usuarios WHERE id = ?';
         db.query(query, [id], (err, results) => {
             if (err) {
                 return callback(err);
@@ -45,7 +42,7 @@ const cliente = {
     },
 
     getAll: (callback) => {
-        const query = 'SELECT * FROM users';
+        const query = 'SELECT * FROM usuarios';
         db.query(query, (err, results) => {
             if (err) {
                 return callback(err);
@@ -55,14 +52,15 @@ const cliente = {
     },
 
     searchByName: (name, callback) => {
-        const query = 'SELECT * FROM users WHERE username LIKE ?';
+        const query = 'SELECT * FROM usuarios WHERE nome LIKE ?';
         db.query(query, [`%${name}%`], (err, results) => {
             if (err) {
                 return callback(err);
             }
             callback(null, results);
         });
-    },    
+    },
 };
 
-module.exports = cliente;
+module.exports = usuarios;
+

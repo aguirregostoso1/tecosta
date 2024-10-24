@@ -1,61 +1,85 @@
-const db = require('../models');
-const Usar = db.usar;
+const Usar = require('../models/usarModel');
 
-exports.getAllUsar = async (req, res) => {
-    try {
-        const usar = await Usar.findAll();
-        res.status(200).json(usar);
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao obter registros', error });
-    }
-};
+const usarController = {
+    createUsar: async (req, res) => {
+        try {
+            const newUsar = {
+                descricao: req.body.descricao,
+                codatend: req.body.codatend,
+                codproduto: req.body.codproduto,
+            };
 
-exports.getUsarById = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const usar = await Usar.findByPk(id);
-        if (!usar) {
-            return res.status(404).json({ message: 'Registro não encontrado' });
+            const usar = await Usar.create(newUsar);
+            res.status(201).json(usar);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-        res.status(200).json(usar);
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao obter registro', error });
-    }
-};
+    },
 
-exports.createUsar = async (req, res) => {
-    try {
-        const usar = await Usar.create(req.body);
-        res.status(201).json(usar);
-    } catch (error) {
-        res.status(400).json({ message: 'Erro ao criar registro', error });
-    }
-};
+    getUsarById: async (req, res) => {
+        try {
+            const usarId = req.params.id;
+            const usar = await Usar.findByPk(usarId);
 
-exports.updateUsar = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const usar = await Usar.findByPk(id);
-        if (!usar) {
-            return res.status(404).json({ message: 'Registro não encontrado' });
+            if (!usar) {
+                return res.status(404).json({ message: 'Registro não encontrado' });
+            }
+
+            res.status(200).json(usar);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-        await usar.update(req.body);
-        res.status(200).json(usar);
-    } catch (error) {
-        res.status(400).json({ message: 'Erro ao atualizar registro', error });
-    }
+    },
+
+    getAllUsar: async (req, res) => {
+        try {
+            const usarList = await Usar.findAll();
+            res.status(200).json(usarList);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    updateUsar: async (req, res) => {
+        try {
+            const usarId = req.params.id;
+            const updatedUsar = {
+                descricao: req.body.descricao,
+                codatend: req.body.codatend,
+                codproduto: req.body.codproduto,
+            };
+
+            const [updated] = await Usar.update(updatedUsar, {
+                where: { id: usarId },
+            });
+
+            if (!updated) {
+                return res.status(404).json({ message: 'Registro não encontrado' });
+            }
+
+            const usar = await Usar.findByPk(usarId);
+            res.status(200).json(usar);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    deleteUsar: async (req, res) => {
+        try {
+            const usarId = req.params.id;
+            const deleted = await Usar.destroy({
+                where: { id: usarId },
+            });
+
+            if (!deleted) {
+                return res.status(404).json({ message: 'Registro não encontrado' });
+            }
+
+            res.status(204).send();
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
 };
 
-exports.deleteUsar = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const usar = await Usar.findByPk(id);
-        if (!usar) {
-            return res.status(404).json({ message: 'Registro não encontrado' });
-        }
-        await usar.destroy();
-        res.status(204).send();
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao deletar registro', error });
-    }
-};
+module.exports = usarController;

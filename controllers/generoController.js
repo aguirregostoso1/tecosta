@@ -1,61 +1,81 @@
-const db = require('../models');
-const Genero = db.genero;
+const Genero = require('../models/generoModel');
 
-exports.getAllGeneros = async (req, res) => {
-    try {
-        const generos = await Genero.findAll();
-        res.status(200).json(generos);
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao obter gêneros', error });
-    }
-};
+const generoController = {
+    createGenero: async (req, res) => {
+        try {
+            const newGenero = {
+                descricao: req.body.descricao,
+            };
 
-exports.getGeneroById = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const genero = await Genero.findByPk(id);
-        if (!genero) {
-            return res.status(404).json({ message: 'Gênero não encontrado' });
+            const genero = await Genero.create(newGenero);
+            res.status(201).json(genero);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-        res.status(200).json(genero);
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao obter gênero', error });
-    }
-};
+    },
 
-exports.createGenero = async (req, res) => {
-    try {
-        const genero = await Genero.create(req.body);
-        res.status(201).json(genero);
-    } catch (error) {
-        res.status(400).json({ message: 'Erro ao criar gênero', error });
-    }
-};
+    getGeneroById: async (req, res) => {
+        try {
+            const generoId = req.params.id;
+            const genero = await Genero.findByPk(generoId);
 
-exports.updateGenero = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const genero = await Genero.findByPk(id);
-        if (!genero) {
-            return res.status(404).json({ message: 'Gênero não encontrado' });
+            if (!genero) {
+                return res.status(404).json({ message: 'Gênero não encontrado' });
+            }
+
+            res.status(200).json(genero);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-        await genero.update(req.body);
-        res.status(200).json(genero);
-    } catch (error) {
-        res.status(400).json({ message: 'Erro ao atualizar gênero', error });
-    }
+    },
+
+    getAllGeneros: async (req, res) => {
+        try {
+            const generos = await Genero.findAll();
+            res.status(200).json(generos);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    updateGenero: async (req, res) => {
+        try {
+            const generoId = req.params.id;
+            const updatedGenero = {
+                descricao: req.body.descricao,
+            };
+
+            const [updated] = await Genero.update(updatedGenero, {
+                where: { id: generoId },
+            });
+
+            if (!updated) {
+                return res.status(404).json({ message: 'Gênero não encontrado' });
+            }
+
+            const genero = await Genero.findByPk(generoId);
+            res.status(200).json(genero);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    deleteGenero: async (req, res) => {
+        try {
+            const generoId = req.params.id;
+            const deleted = await Genero.destroy({
+                where: { id: generoId },
+            });
+
+            if (!deleted) {
+                return res.status(404).json({ message: 'Gênero não encontrado' });
+            }
+
+            res.status(204).send();
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
 };
 
-exports.deleteGenero = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const genero = await Genero.findByPk(id);
-        if (!genero) {
-            return res.status(404).json({ message: 'Gênero não encontrado' });
-        }
-        await genero.destroy();
-        res.status(204).send();
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao deletar gênero', error });
-    }
-};
+module.exports = generoController;

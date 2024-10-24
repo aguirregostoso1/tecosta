@@ -1,9 +1,9 @@
 const db = require('../config/db');
 
-const ENDERECO = {
-    create: (user, callback) => {
-        const query = 'INSERT INTO users (descricao, codatend, codproduto) VALUES (?, ?, ?)';
-        db.query(query, [ENDERECO.rua, ENDERECO.numero, ENDERECO.bairro, ENDERECO.cidade, ENDERECO.uf, ENDERECO.cep,], (err, results) => {
+const Cliente = {
+    create: (cliente, callback) => {
+        const query = 'INSERT INTO cliente (nome, cpf, datanasc, codgenero, endereco, codatend) VALUES (?, ?, ?, ?, ?, ?)';
+        db.query(query, [cliente.nome, cliente.cpf, cliente.datanasc, cliente.codgenero, cliente.endereco, cliente.codatend], (err, results) => {
             if (err) {
                 return callback(err);
             }
@@ -12,7 +12,7 @@ const ENDERECO = {
     },
 
     findById: (id, callback) => {
-        const query = 'SELECT * FROM users WHERE id = ?';
+        const query = 'SELECT * FROM cliente WHERE id = ?';
         db.query(query, [id], (err, results) => {
             if (err) {
                 return callback(err);
@@ -21,12 +21,9 @@ const ENDERECO = {
         });
     },
 
- 
-
-
-    update: (id, user, callback) => {
-        const query = 'INSERT INTO users (descricao, codatend, codproduto) VALUES (?, ?, ?)';
-        db.query(query, [ENDERECO.rua, ENDERECO.numero, ENDERECO.bairro, ENDERECO.cidade, ENDERECO.uf, ENDERECO.cep,], (err, results) => {
+    update: (id, cliente, callback) => {
+        const query = 'UPDATE cliente SET nome = ?, cpf = ?, datanasc = ?, codgenero = ?, endereco = ?, codatend = ? WHERE id = ?';
+        db.query(query, [cliente.nome, cliente.cpf, cliente.datanasc, cliente.codgenero, cliente.endereco, cliente.codatend, id], (err, results) => {
             if (err) {
                 return callback(err);
             }
@@ -35,7 +32,7 @@ const ENDERECO = {
     },
 
     delete: (id, callback) => {
-        const query = 'DELETE FROM users WHERE id = ?';
+        const query = 'DELETE FROM cliente WHERE id = ?';
         db.query(query, [id], (err, results) => {
             if (err) {
                 return callback(err);
@@ -45,7 +42,7 @@ const ENDERECO = {
     },
 
     getAll: (callback) => {
-        const query = 'SELECT * FROM users';
+        const query = 'SELECT * FROM cliente';
         db.query(query, (err, results) => {
             if (err) {
                 return callback(err);
@@ -55,14 +52,14 @@ const ENDERECO = {
     },
 
     searchByName: (name, callback) => {
-        const query = 'SELECT * FROM users WHERE username LIKE ?';
+        const query = 'SELECT * FROM cliente WHERE nome LIKE ?';
         db.query(query, [`%${name}%`], (err, results) => {
             if (err) {
                 return callback(err);
             }
             callback(null, results);
         });
-    },    
+    },
 };
 
-module.exports = ENDERECO;
+module.exports = Cliente;

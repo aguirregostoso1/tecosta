@@ -1,9 +1,9 @@
 const db = require('../config/db');
 
-const atendimento = {
-    create: (user, callback) => {
-        const query = 'INSERT INTO users (descricao, codatend, codproduto) VALUES (?, ?, ?)';
-        db.query(query, [atendimento.dia, atendimento.hora, atendimento.motivo, atendimento.procedimento, atendimento.vcobrado, atendimento.formapag, atendimento.codprof], (err, results) => {
+const Genero = {
+    create: (genero, callback) => {
+        const query = 'INSERT INTO genero (descricao) VALUES (?)';
+        db.query(query, [genero.descricao], (err, results) => {
             if (err) {
                 return callback(err);
             }
@@ -12,7 +12,7 @@ const atendimento = {
     },
 
     findById: (id, callback) => {
-        const query = 'SELECT * FROM users WHERE id = ?';
+        const query = 'SELECT * FROM genero WHERE id = ?';
         db.query(query, [id], (err, results) => {
             if (err) {
                 return callback(err);
@@ -21,12 +21,9 @@ const atendimento = {
         });
     },
 
- 
-
-
-    update: (id, user, callback) => {
-        const query = 'INSERT INTO users (descricao, codatend, codproduto) VALUES (?, ?, ?)';
-        db.query(query, [atendimento.dia, atendimento.hora, atendimento.motivo, atendimento.procedimento, atendimento.vcobrado, atendimento.formapag, atendimento.codprof], (err, results) => {
+    update: (id, genero, callback) => {
+        const query = 'UPDATE genero SET descricao = ? WHERE id = ?';
+        db.query(query, [genero.descricao, id], (err, results) => {
             if (err) {
                 return callback(err);
             }
@@ -35,7 +32,7 @@ const atendimento = {
     },
 
     delete: (id, callback) => {
-        const query = 'DELETE FROM users WHERE id = ?';
+        const query = 'DELETE FROM genero WHERE id = ?';
         db.query(query, [id], (err, results) => {
             if (err) {
                 return callback(err);
@@ -45,7 +42,7 @@ const atendimento = {
     },
 
     getAll: (callback) => {
-        const query = 'SELECT * FROM users';
+        const query = 'SELECT * FROM genero';
         db.query(query, (err, results) => {
             if (err) {
                 return callback(err);
@@ -55,14 +52,14 @@ const atendimento = {
     },
 
     searchByName: (name, callback) => {
-        const query = 'SELECT * FROM users WHERE username LIKE ?';
+        const query = 'SELECT * FROM genero WHERE descricao LIKE ?';
         db.query(query, [`%${name}%`], (err, results) => {
             if (err) {
                 return callback(err);
             }
             callback(null, results);
         });
-    },    
+    },
 };
 
-module.exports = atendimento;
+module.exports = Genero;

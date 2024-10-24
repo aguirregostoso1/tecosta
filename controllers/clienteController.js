@@ -1,61 +1,91 @@
-const db = require('../models');
-const Cliente = db.cliente;
+const Cliente = require('../models/clienteModel');
 
-exports.getAllClientes = async (req, res) => {
-    try {
-        const clientes = await Cliente.findAll();
-        res.status(200).json(clientes);
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao obter clientes', error });
-    }
-};
+const clienteController = {
+    createCliente: async (req, res) => {
+        try {
+            const newCliente = {
+                nome: req.body.nome,
+                cpf: req.body.cpf,
+                datanasc: req.body.datanasc,
+                codgenero: req.body.codgenero,
+                endereco: req.body.endereco,
+                codatend: req.body.codatend,
+            };
 
-exports.getClienteById = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const cliente = await Cliente.findByPk(id);
-        if (!cliente) {
-            return res.status(404).json({ message: 'Cliente não encontrado' });
+            const cliente = await Cliente.create(newCliente);
+            res.status(201).json(cliente);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-        res.status(200).json(cliente);
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao obter cliente', error });
-    }
-};
+    },
 
-exports.createCliente = async (req, res) => {
-    try {
-        const cliente = await Cliente.create(req.body);
-        res.status(201).json(cliente);
-    } catch (error) {
-        res.status(400).json({ message: 'Erro ao criar cliente', error });
-    }
-};
+    getClienteById: async (req, res) => {
+        try {
+            const clienteId = req.params.id;
+            const cliente = await Cliente.findByPk(clienteId);
 
-exports.updateCliente = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const cliente = await Cliente.findByPk(id);
-        if (!cliente) {
-            return res.status(404).json({ message: 'Cliente não encontrado' });
+            if (!cliente) {
+                return res.status(404).json({ message: 'Cliente não encontrado' });
+            }
+
+            res.status(200).json(cliente);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-        await cliente.update(req.body);
-        res.status(200).json(cliente);
-    } catch (error) {
-        res.status(400).json({ message: 'Erro ao atualizar cliente', error });
-    }
+    },
+
+    getAllClientes: async (req, res) => {
+        try {
+            const clientes = await Cliente.findAll();
+            res.status(200).json(clientes);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    updateCliente: async (req, res) => {
+        try {
+            const clienteId = req.params.id;
+            const updatedCliente = {
+                nome: req.body.nome,
+                cpf: req.body.cpf,
+                datanasc: req.body.datanasc,
+                codgenero: req.body.codgenero,
+                endereco: req.body.endereco,
+                codatend: req.body.codatend,
+            };
+
+            const [updated] = await Cliente.update(updatedCliente, {
+                where: { id: clienteId },
+            });
+
+            if (!updated) {
+                return res.status(404).json({ message: 'Cliente não encontrado' });
+            }
+
+            const cliente = await Cliente.findByPk(clienteId);
+            res.status(200).json(cliente);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    deleteCliente: async (req, res) => {
+        try {
+            const clienteId = req.params.id;
+            const deleted = await Cliente.destroy({
+                where: { id: clienteId },
+            });
+
+            if (!deleted) {
+                return res.status(404).json({ message: 'Cliente não encontrado' });
+            }
+
+            res.status(204).send();
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
 };
 
-exports.deleteCliente = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const cliente = await Cliente.findByPk(id);
-        if (!cliente) {
-            return res.status(404).json({ message: 'Cliente não encontrado' });
-        }
-        await cliente.destroy();
-        res.status(204).send();
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao deletar cliente', error });
-    }
-};
+module.exports = clienteController;

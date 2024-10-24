@@ -1,61 +1,81 @@
-const db = require('../models');
-const Especializacao = db.especializacao;
+const Especializacao = require('../models/especializacaoModel');
 
-exports.getAllEspecializacoes = async (req, res) => {
-    try {
-        const especializacoes = await Especializacao.findAll();
-        res.status(200).json(especializacoes);
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao obter especializações', error });
-    }
-};
+const especializacaoController = {
+    createEspecializacao: async (req, res) => {
+        try {
+            const newEspecializacao = {
+                descricao: req.body.descricao,
+            };
 
-exports.getEspecializacaoById = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const especializacao = await Especializacao.findByPk(id);
-        if (!especializacao) {
-            return res.status(404).json({ message: 'Especialização não encontrada' });
+            const especializacao = await Especializacao.create(newEspecializacao);
+            res.status(201).json(especializacao);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-        res.status(200).json(especializacao);
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao obter especialização', error });
-    }
-};
+    },
 
-exports.createEspecializacao = async (req, res) => {
-    try {
-        const especializacao = await Especializacao.create(req.body);
-        res.status(201).json(especializacao);
-    } catch (error) {
-        res.status(400).json({ message: 'Erro ao criar especialização', error });
-    }
-};
+    getEspecializacaoById: async (req, res) => {
+        try {
+            const especializacaoId = req.params.id;
+            const especializacao = await Especializacao.findByPk(especializacaoId);
 
-exports.updateEspecializacao = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const especializacao = await Especializacao.findByPk(id);
-        if (!especializacao) {
-            return res.status(404).json({ message: 'Especialização não encontrada' });
+            if (!especializacao) {
+                return res.status(404).json({ message: 'Especialização não encontrada' });
+            }
+
+            res.status(200).json(especializacao);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-        await especializacao.update(req.body);
-        res.status(200).json(especializacao);
-    } catch (error) {
-        res.status(400).json({ message: 'Erro ao atualizar especialização', error });
-    }
+    },
+
+    getAllEspecializacoes: async (req, res) => {
+        try {
+            const especializacoes = await Especializacao.findAll();
+            res.status(200).json(especializacoes);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    updateEspecializacao: async (req, res) => {
+        try {
+            const especializacaoId = req.params.id;
+            const updatedEspecializacao = {
+                descricao: req.body.descricao,
+            };
+
+            const [updated] = await Especializacao.update(updatedEspecializacao, {
+                where: { id: especializacaoId },
+            });
+
+            if (!updated) {
+                return res.status(404).json({ message: 'Especialização não encontrada' });
+            }
+
+            const especializacao = await Especializacao.findByPk(especializacaoId);
+            res.status(200).json(especializacao);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    deleteEspecializacao: async (req, res) => {
+        try {
+            const especializacaoId = req.params.id;
+            const deleted = await Especializacao.destroy({
+                where: { id: especializacaoId },
+            });
+
+            if (!deleted) {
+                return res.status(404).json({ message: 'Especialização não encontrada' });
+            }
+
+            res.status(204).send();
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
 };
 
-exports.deleteEspecializacao = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const especializacao = await Especializacao.findByPk(id);
-        if (!especializacao) {
-            return res.status(404).json({ message: 'Especialização não encontrada' });
-        }
-        await especializacao.destroy();
-        res.status(204).send();
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao deletar especialização', error });
-    }
-};
+module.exports = especializacaoController;
