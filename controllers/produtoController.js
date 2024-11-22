@@ -1,8 +1,7 @@
-// controllers/produtoController.js
-
 const Produto = require('../models/produtoModel');
 
 const produtoController = {
+    // Criar novo produto
     createProduto: async (req, res) => {
         try {
             const newProduto = {
@@ -28,6 +27,7 @@ const produtoController = {
         }
     },
 
+    // Obter produto por ID
     getProdutoById: async (req, res) => {
         try {
             const produtoId = req.params.id;
@@ -42,6 +42,7 @@ const produtoController = {
         }
     },
 
+    // Obter todos os produtos
     getAllProdutos: async (req, res) => {
         try {
             const produtos = await Produto.findAll();
@@ -51,6 +52,7 @@ const produtoController = {
         }
     },
 
+    // Atualizar produto
     updateProduto: async (req, res) => {
         try {
             const produtoId = req.params.id;
@@ -84,6 +86,7 @@ const produtoController = {
         }
     },
 
+    // Deletar produto
     deleteProduto: async (req, res) => {
         try {
             const produtoId = req.params.id;

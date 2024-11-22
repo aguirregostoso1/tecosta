@@ -1,65 +1,40 @@
-const db = require('../config/db');
+// models/atendimentoModel.js
 
-const Atendimento = {
-    create: (atendimento, callback) => {
-        const query = 'INSERT INTO atendimento (dia, hora, motivo, procedimento, vcobrado, formapag, codprof) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        db.query(query, [atendimento.dia, atendimento.hora, atendimento.motivo, atendimento.procedimento, atendimento.vcobrado, atendimento.formapag, atendimento.codprof], (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results.insertId);
-        });
-    },
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Caminho do arquivo de configuração do Sequelize
 
-    findById: (id, callback) => {
-        const query = 'SELECT * FROM atendimento WHERE id = ?';
-        db.query(query, [id], (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results[0]);
-        });
+const Atendimento = sequelize.define('Atendimento', {
+    dia: {
+        type: DataTypes.DATE,
+        allowNull: false
     },
-
-    update: (id, atendimento, callback) => {
-        const query = 'UPDATE atendimento SET dia = ?, hora = ?, motivo = ?, procedimento = ?, vcobrado = ?, formapag = ?, codprof = ? WHERE id = ?';
-        db.query(query, [atendimento.dia, atendimento.hora, atendimento.motivo, atendimento.procedimento, atendimento.vcobrado, atendimento.formapag, atendimento.codprof, id], (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results);
-        });
+    hora: {
+        type: DataTypes.TIME,
+        allowNull: false
     },
-
-    delete: (id, callback) => {
-        const query = 'DELETE FROM atendimento WHERE id = ?';
-        db.query(query, [id], (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results);
-        });
+    motivo: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-
-    getAll: (callback) => {
-        const query = 'SELECT * FROM atendimento';
-        db.query(query, (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results);
-        });
+    procedimento: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-
-    searchByName: (name, callback) => {
-        const query = 'SELECT * FROM atendimento WHERE motivo LIKE ?';
-        db.query(query, [`%${name}%`], (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results);
-        });
+    vcobrado: {
+        type: DataTypes.FLOAT,
+        allowNull: false
     },
-};
+    formapag: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    codprof: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
+}, {
+    tableName: 'atendimentos', // Nome da tabela no banco de dados
+    timestamps: false, // Se você não estiver usando os campos createdAt/updatedAt
+});
 
 module.exports = Atendimento;

@@ -1,5 +1,3 @@
-// routes/atendimentoRoutes.js
-
 const express = require('express');
 const atendimentoController = require('../controllers/atendimentoController');
 const router = express.Router();

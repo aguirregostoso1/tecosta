@@ -88,6 +88,25 @@ const atendimentoController = {
             res.status(500).json({ error: err.message });
         }
     },
+
+    // Se você precisar das funções renderCreateForm e renderEditForm, adicione-as
+    renderCreateForm: (req, res) => {
+        res.render('createAtendimento'); // substitua pelo nome correto da view
+    },
+
+    renderEditForm: (req, res) => {
+        const atendimentoId = req.params.id;
+        Atendimento.findByPk(atendimentoId)
+            .then(atendimento => {
+                if (!atendimento) {
+                    return res.status(404).json({ message: 'Atendimento não encontrado' });
+                }
+                res.render('editAtendimento', { atendimento }); // substitua pelo nome correto da view
+            })
+            .catch(err => {
+                res.status(500).json({ error: err.message });
+            });
+    },
 };
 
 module.exports = atendimentoController;

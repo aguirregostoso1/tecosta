@@ -3,17 +3,6 @@ CREATE DATABASE CRUD;
 USE CRUD;
 
 CREATE TABLE
-    usar (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        descricao VARCHAR(50) NOT NULL,
-        codatend foreign KEY int NOT NULL,
-        codproduto foreign key int not null,
-    );
-
-/ / crie a tabela produtos com os campos id,
-nome,
-descricao e preco
-CREATE TABLE
     produtos (
         id INT AUTO_INCREMENT PRIMARY KEY,
         vcompra REAL NOT NULL,
@@ -38,6 +27,7 @@ CREATE TABLE
         datanasc DATE NOT NULL,
         fone int not null,
         email VARCHAR(50) not null,
+        especializacao varchar(30) not null
     );
 
 CREATE TABLE
@@ -45,12 +35,13 @@ CREATE TABLE
         id INT AUTO_INCREMENT PRIMARY KEY,
         nome VARCHAR(50) NOT NULL,
         cpf char(14) NOT NULL,
-        datanasc DATE not null,
-        codgenero int not null,
+        datanasc DATE NOT NULL,
+        codgenero int NOT NULL,
         rua VARCHAR(50) NOT NULL,
         numero int NOT NULL,
         bairro VARCHAR(30) NOT NULL,
-        cidade VARCHAR(40) not null,
+        cidade VARCHAR(40) NOT NULL,
+        genero varchar(15) NOT NULL
         uf VARCHAR(2) not null,
         cep char(9) NOT NULL codatend int not null
     );
@@ -65,16 +56,4 @@ CREATE TABLE
         vcobrado REAL NOT NULL,
         formapag varchar(30) not null,
         codprof foreign KEY int not null,
-    );
-
-CREATE TABLE
-    genero (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        descricao VARCHAR(9) NOT NULL,
-    );
-
-CREATE TABLE
-    especializacao (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        descricao VARCHAR(30) NOT NULL,
     );

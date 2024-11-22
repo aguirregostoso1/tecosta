@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require('../config/database');
 
 const usuarios = {
     create: (usuarios, callback) => {
@@ -22,7 +22,7 @@ const usuarios = {
     },
 
     update: (id, usuarios, callback) => {
-        const query = 'UPDATE usuarios SET nome = ?, datanasc = ?, fone = ?, email = ?, WHERE id = ?';
+        const query = 'UPDATE usuarios SET nome = ?, datanasc = ?, fone = ?, email = ? WHERE id = ?';
         db.query(query, [usuarios.nome,  usuarios.fone, usuarios.email,usuarios.datanasc ], (err, results) => {
             if (err) {
                 return callback(err);
