@@ -6,7 +6,7 @@ const expressLayouts = require('express-ejs-layouts');
 const indexRoutes = require('./routes/indexRoutes');
 const userRoutes = require('./routes/usuariosRoutes');
 const produtoRoutes = require('./routes/produtoRoutes');
-const atendimentoRoutes = require('./routes/atendimentoRoutes')
+const atendimentoRoutes = require('./routes/atendimentoRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,7 +17,9 @@ app.use(expressLayouts);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(methodOverride('_method'));
+app.use(express.static(__dirname + '/public'));
 
 app.use('/', indexRoutes);
 app.use('/usuarios', userRoutes);
@@ -25,5 +27,5 @@ app.use('/produtos', produtoRoutes);
 app.use('/atendimentos', atendimentoRoutes);
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
