@@ -1,16 +1,24 @@
 const db = require('../config/database');
 
 const usuarios = {
-    create: (usuarios, callback) => {
-        const query = 'INSERT INTO usuarios (nome, datanasc, fone, email) VALUES (?, ?, ?, ?)';
-        db.query(query, [usuarios.nome,  usuarios.fone, usuarios.email,usuarios.datanasc ], (err, results) => {
+    create: (userData, callback) => {
+        if (!userData.nome || !userData.datanasc || !userData.fone || !userData.email || !userData.senha) {
+            return callback(new Error('Todos os campos são obrigatórios.'));
+        }
+    
+        const sql = `INSERT INTO usuarios (nome, datanasc, fone, email, senha) VALUES (?, ?, ?, ?, ?)`;
+    
+        db.query(sql, [userData.nome, userData.datanasc, userData.fone, userData.email, userData.senha], (err, results) => {
             if (err) {
+                console.error('Erro no SQL:', err.sqlMessage);
+                console.error('Consulta SQL:', sql);
+                console.error('Parâmetros:', [userData.nome, userData.datanasc, userData.fone, userData.email, userData.senha]);
                 return callback(err);
             }
             callback(null, results.insertId);
         });
-    },
-
+    },    
+    
     findById: (id, callback) => {
         const query = 'SELECT * FROM usuarios WHERE id = ?';
         db.query(query, [id], (err, results) => {
@@ -23,7 +31,7 @@ const usuarios = {
 
     update: (id, usuarios, callback) => {
         const query = 'UPDATE usuarios SET nome = ?, datanasc = ?, fone = ?, email = ? WHERE id = ?';
-        db.query(query, [usuarios.nome,  usuarios.fone, usuarios.email,usuarios.datanasc ], (err, results) => {
+        db.query(query, [usuarios.nome, usuarios.fone, usuarios.email, usuarios.datanasc], (err, results) => {
             if (err) {
                 return callback(err);
             }

@@ -1,24 +1,6 @@
 const usuarios = require('../models/usuariosModel');
 
 const usuarioController = {
-    // Criar novo usuário
-    create: (req, res) => {
-        const newUser = {
-            nome: req.body.nome,
-            datanasc: req.body.datanasc,
-            fone: req.body.fone,
-            email: req.body.email,
-        };
-
-        usuarios.create(newUser, (err, insertId) => {
-            if (err) {
-                return res.status(500).json({ error: err.message });
-            }
-            res.status(201).json({ id: insertId, ...newUser });
-        });
-    },
-
-    // Obter todos os usuários
     getAll: (req, res) => {
         usuarios.getAll((err, results) => {
             if (err) {

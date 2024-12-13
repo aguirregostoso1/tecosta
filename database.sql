@@ -23,7 +23,7 @@ CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     datanasc DATE NOT NULL,
-    fone VARCHAR(20) NOT NULL, -- Modificado para VARCHAR para suportar formatos de telefone
+    fone VARCHAR(20) NOT NULL,
     email VARCHAR(50) NOT NULL,
     especializacao VARCHAR(30) NOT NULL
 );
@@ -52,6 +52,6 @@ CREATE TABLE atendimento (
     procedimento VARCHAR(100) NOT NULL,
     vcobrado REAL NOT NULL,
     formapag VARCHAR(30) NOT NULL,
-    codprof INT NOT NULL, -- Modificado para tipo INT
-    FOREIGN KEY (codprof) REFERENCES usuarios(id) -- Relacionamento correto com a tabela usuarios
+    codprof INT NOT NULL, 
+    FOREIGN KEY (codprof) REFERENCES usuarios(id) 
 );

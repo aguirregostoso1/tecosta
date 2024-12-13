@@ -1,26 +1,25 @@
-<div class="container-center">
-    
-  <div class="login-container">
-    <div class="logo">
-      <img src="/images/logo.png" alt="Logo"> <!-- Substitua pelo caminho da sua imagem -->
-    </div>
-    <h1>Login</h1>
-    <form action="/login" method="POST">
-      <div class="input-group">
-        <label for="usuario">Usuário ou Email</label>
-        <input type="text" id="usuario" name="usuario" placeholder="Digite seu usuário ou email" required>
+<div class="container-login">
+  <div class="container-center">
+    <div class="login-container">
+      <div class="logo">
+        <img src="/images/logo.png" alt="Logo">
       </div>
-      <div class="input-group">
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+      <h1>Login</h1>
+      <form action="/auth/login" method="POST">
+        <div class="input-group">
+          <label for="usuario">Usuário ou Email</label>
+          <input type="text" id="usuario" name="usuario" placeholder="Digite seu usuário ou email" required>
+        </div>
+        <div class="input-group">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+        </div>
+        <button type="submit" class="btn">Entrar</button>
+      </form>
+      <div class="links">
+        <p><a href="/cadastro">Não é um cliente ainda? Cadastrar-se</a></p>
+        <p><a href="/horarios">horarios</a></p>
       </div>
-      <button type="submit" class="btn">Entrar</button>
-    </form>
-    <div class="links">
-      <p><a href="/forgot-password">Esqueceu sua senha?</a></p>
-      <p><a href="/cadastro">Cadastrar</a></p>
     </div>
   </div>
-
-
 </div>
