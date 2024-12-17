@@ -25,7 +25,7 @@ CREATE TABLE usuarios (
     datanasc DATE NOT NULL,
     fone VARCHAR(20) NOT NULL,
     email VARCHAR(50) NOT NULL,
-    especializacao VARCHAR(30) NOT NULL
+    senha VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE clientes (

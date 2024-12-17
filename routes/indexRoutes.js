@@ -10,7 +10,7 @@ router.get('/cadastro', function(req,res) {
 });
 
 router.get('/horarios', function(req,res) {
-res.render('horarios');
+  res.render('horarios');
 });
 
 

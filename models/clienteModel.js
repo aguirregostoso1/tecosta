@@ -1,65 +1,23 @@
-const db = require('../config/db');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const Cliente = {
-    create: (cliente, callback) => {
-        const query = 'INSERT INTO cliente (nome, cpf, datanasc, codgenero, endereco, codatend) VALUES (?, ?, ?, ?, ?, ?)';
-        db.query(query, [cliente.nome, cliente.cpf, cliente.datanasc, cliente.codgenero, cliente.endereco, cliente.codatend], (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results.insertId);
-        });
-    },
-
-    findById: (id, callback) => {
-        const query = 'SELECT * FROM cliente WHERE id = ?';
-        db.query(query, [id], (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results[0]);
-        });
-    },
-
-    update: (id, cliente, callback) => {
-        const query = 'UPDATE cliente SET nome = ?, cpf = ?, datanasc = ?, codgenero = ?, endereco = ?, codatend = ? WHERE id = ?';
-        db.query(query, [cliente.nome, cliente.cpf, cliente.datanasc, cliente.codgenero, cliente.endereco, cliente.codatend, id], (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results);
-        });
-    },
-
-    delete: (id, callback) => {
-        const query = 'DELETE FROM cliente WHERE id = ?';
-        db.query(query, [id], (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results);
-        });
-    },
-
-    getAll: (callback) => {
-        const query = 'SELECT * FROM cliente';
-        db.query(query, (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results);
-        });
-    },
-
-    searchByName: (name, callback) => {
-        const query = 'SELECT * FROM cliente WHERE nome LIKE ?';
-        db.query(query, [`%${name}%`], (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null, results);
-        });
-    },
-};
+const Cliente = sequelize.define('Cliente', {
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+    nome: { type: DataTypes.STRING(50), allowNull: false },
+    cpf: { type: DataTypes.CHAR(14), allowNull: false },
+    datanasc: { type: DataTypes.DATE, allowNull: false },
+    codgenero: { type: DataTypes.INTEGER, allowNull: false },
+    rua: { type: DataTypes.STRING(50), allowNull: false },
+    numero: { type: DataTypes.INTEGER, allowNull: false },
+    bairro: { type: DataTypes.STRING(30), allowNull: false },
+    cidade: { type: DataTypes.STRING(40), allowNull: false },
+    genero: { type: DataTypes.STRING(15), allowNull: false },
+    uf: { type: DataTypes.STRING(2), allowNull: false },
+    cep: { type: DataTypes.CHAR(9), allowNull: false },
+    codatend: { type: DataTypes.INTEGER, allowNull: false },
+}, {
+    tableName: 'clientes',
+    timestamps: false,
+});
 
 module.exports = Cliente;
