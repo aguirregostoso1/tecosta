@@ -1,20 +1,20 @@
+const bcrypt = require('bcrypt');
 const usuarios = require('../models/usuariosModel');
 
 const authController = {
   login: async (req, res) => {
     const { email, senha } = req.body;
     try {
-      const user = await User.findOne({ where: { email } });
+      const user = await usuarios.findOne({ where: { email } });
 
-      if (!user || user.senha !== senha) {
-        return res.status(401).json({ message: 'Credenciais inválidas' });
+      if (!user || !(await bcrypt.compare(senha, user.senha))) {
+        return res.render('index', { errorMessage: 'Senha invalida!' });
       }
 
       req.session.userId = user.id;
-      req.session.userName = user.nome;
-      req.session.nome = user;
+      req.session.user = user;
 
-      res.status(200).json({ message: 'Login bem-sucedido' });
+      res.redirect('/dashboard');
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
@@ -22,6 +22,10 @@ const authController = {
 
   cadastro: async (req, res) => {
     const { nome, datanasc, fone, email, senha } = req.body;
+    const userExists = await usuarios.findOne({ where: { email } });
+    if (userExists) {
+      return res.render('cadastro', { errorMessage: 'Email já cadastrado' });
+    }
 
     const formatarData = (data) => {
       const date = new Date(data);
@@ -33,19 +37,18 @@ const authController = {
 
     const datanascFormatada = formatarData(datanasc);
 
-    const newUser = { nome, datanasc: datanascFormatada, fone, email, senha };
-
     try {
-      usuarios.create(newUser, (err, insertId) => {
-        if (err) {
-          return res.status(500).json({ error: err.message });
-        }
+      const salt = await bcrypt.genSalt(10);
+      const senhaHash = await bcrypt.hash(senha, salt);
 
-        req.session.userId = insertId;
-        req.session.userName = newUser.nome;
+      const newUser = { nome, datanasc: datanascFormatada, fone, email, senha: senhaHash };
 
-        res.status(201).json({ id: insertId, ...newUser });
-      });
+      const createdUser = await usuarios.create(newUser);
+
+      req.session.userId = createdUser.id;
+      req.session.user = newUser;
+
+      res.redirect('/dashboard');
     } catch (err) {
       res.status(500).json({ error: err.message });
     }

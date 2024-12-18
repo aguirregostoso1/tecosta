@@ -1,11 +1,7 @@
-// config/database.js
-
 const { Sequelize } = require('sequelize');
 const dotenv = require('dotenv');
 
-
 dotenv.config();
-
 
 const sequelize = new Sequelize(
     process.env.DB_NAME,       
@@ -14,11 +10,11 @@ const sequelize = new Sequelize(
     {
         host: process.env.DB_HOST,   
         dialect: 'mysql',           
-        logging: false,              
+        logging: false,
+        port: '3307',           
     }
 );
 
-// Testar a conexão
 sequelize.authenticate()
     .then(() => {
         console.log('Conexão com o banco de dados MySQL foi bem-sucedida.');
@@ -27,5 +23,4 @@ sequelize.authenticate()
         console.error('Erro ao conectar-se ao banco de dados:', err);
     });
 
-// Exportar a instância do Sequelize
 module.exports = sequelize;

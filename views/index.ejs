@@ -2,20 +2,36 @@
   <div class="container-center">
     <div class="login-container">
       <div class="logo">
-        <img src="/images/logo.png" alt="Logo">
+        <img src="/images/logo.png" alt="Logo" />
       </div>
       <h1>Login</h1>
       <form action="/auth/login" method="POST">
         <div class="input-group">
-          <label for="usuario">Usuário ou Email</label>
-          <input type="text" id="usuario" name="usuario" placeholder="Digite seu usuário ou email" required>
+          <label for="email">Usuário ou Email</label>
+          <input
+            type="text"
+            id="email"
+            name="email"
+            placeholder="Digite seu email"
+            required
+          />
         </div>
         <div class="input-group">
           <label for="senha">Senha</label>
-          <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+          <input
+            type="password"
+            id="senha"
+            name="senha"
+            placeholder="Digite sua senha"
+            required
+          />
         </div>
         <button type="submit" class="btn">Entrar</button>
       </form>
+      <!-- Exibe mensagens de erro -->
+      <% if (typeof errorMessage !== 'undefined') { %>
+      <div class="error-message"><%= errorMessage %></div>
+      <% } %>
       <div class="links">
         <p><a href="/cadastro">Não é um cliente ainda? Cadastrar-se</a></p>
         <p><a href="/horarios">horarios</a></p>
