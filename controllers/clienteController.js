@@ -43,6 +43,19 @@ const clienteController = {
         }
     },
 
+    getAllClientesData: async () => {
+        try {
+            const clientes = await Cliente.findAll();
+            return clientes.map(cliente => ({
+                nome: cliente.nome,
+                dadosPessoais: cliente.cpf,
+                descricao: `Endereço: ${cliente.rua}, ${cliente.numero}, ${cliente.bairro}, ${cliente.cidade}, ${cliente.uf}, CEP: ${cliente.cep}`
+            }));
+        } catch (err) {
+            throw new Error('Erro ao buscar clientes: ' + err.message);
+        }
+    },
+
     updateCliente: async (req, res) => {
         try {
             const clienteId = req.params.id;

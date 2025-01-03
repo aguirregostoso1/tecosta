@@ -1,13 +1,40 @@
-<div class="cliente">
-    <p>Jagdsgda</p>
-    <h2>Faça seu login</h2>
-    <form method="POST">
-        <label for="nome">Insira seu nome:</label>
-        <input type="text" name="nome" id="nome" placeholder="Insira o seu nome">
-        <label for="nome">Insira seu email:</label>
-        <input type="text" name="email" id="email" placeholder="Insira o seu email">
-        <label for="nome">Insira sua senha:</label>
-        <input type="text" name="senha" id="senha" placeholder="Insira o seu senha">
-    </form>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastros</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a href="/calendario"><img src="/images/calendar-icon.png" alt="Agenda"></a>
+    <a href="#pagamentos"><img src="/images/payment-icon.png" alt="Pagamentos"></a>
+    <a href="#usuarios"><img src="/images/users-icon.png" alt="Usuários"></a>
+  </aside>
 
-</div>
+  <header>
+    <h1>CADASTROS</h1>
+  </header>
+
+  <main class="container container-horarios">
+    <button class="btn-adicionar">Adicionar Cadastro</button>
+    <div class="usuarios">
+      <% if (usuarios.length > 0) { %>
+        <% usuarios.forEach(usuario => { %>
+          <div class="usuario-card">
+            <img src="/images/user-icon.png" alt="Ícone do usuário">
+            <div class="usuario-info">
+              <h3><%= usuario.nome %></h3>
+              <p><strong>Dados Pessoais:</strong> <%= usuario.dadosPessoais %></p>
+              <p><strong>Descrição:</strong> <%= usuario.descricao %></p>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p>Não há usuários cadastrados.</p>
+      <% } %>
+    </div>
+  </main>
+</body>
+</html>
