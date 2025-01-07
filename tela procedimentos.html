@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Procedimentos</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        header img {
+            width: 50px;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #008080;
+            font-weight: normal;
+        }
+
+        nav a:nth-child(1) {
+            background-color: #008080;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card h3 {
+            margin: 10px 0;
+            color: #008080;
+            font-size: 16px;
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="fotos/logotipo.jpeg" alt="Logo">
+        <nav>
+            <a href="#">PROCEDIMENTOS</a>
+            <a href="#">AGENDA</a>
+            <a href="#">CADASTROS</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="card">
+            <img src="fotos/terapiaOrtomolecular.jpeg" alt="Terapia Ortomolecular">
+            <h3>TERAPIA ORTOMOLECULAR</h3>
+        </div>
+        <div class="card">
+            <img src="fotos/criomodelagem.jpeg" alt="Criomodelagem">
+            <h3>CRIOMODELAGEM</h3>
+        </div>
+        <div class="card">
+            <img src="fotos/renataFranca.jpeg" alt="Renata França">
+            <h3>RENATA FRANÇA</h3>
+        </div>
+        <div class="card">
+            <img src="fotos/ozonio.jpeg" alt="Ozonioterapia">
+            <h3>OZONIOTERAPIA</h3>
+        </div>
+    </main>
+</body>
+</html>
