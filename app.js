@@ -9,6 +9,8 @@ const produtoRoutes = require('./routes/produtoRoutes');
 const atendimentoRoutes = require('./routes/atendimentoRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes')
 
+const path = require('path')
+
 const session = require('express-session');
 
 const requireAuth = require('./middleware/requireAuth');
@@ -29,6 +31,8 @@ app.use(
   })
 );
 
+
+
 const sequelize = require('./config/database');
 
 sequelize.sync({ force: false }) 
@@ -40,7 +44,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(methodOverride('_method'));
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+  res.locals.baseUrl = `${req.protocol}://${req.get('host')}`;
+  next();
+});
+
 
 app.use('/', indexRoutes);
 app.use('/auth', authRoutes);

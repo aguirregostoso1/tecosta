@@ -33,7 +33,6 @@ CREATE TABLE clientes (
     nome VARCHAR(50) NOT NULL,
     cpf CHAR(14) NOT NULL,
     datanasc DATE NOT NULL,
-    codgenero INT NOT NULL,
     rua VARCHAR(50) NOT NULL,
     numero INT NOT NULL,
     bairro VARCHAR(30) NOT NULL,
@@ -41,7 +40,6 @@ CREATE TABLE clientes (
     genero VARCHAR(15) NOT NULL,
     uf VARCHAR(2) NOT NULL,
     cep CHAR(9) NOT NULL,
-    codatend INT NOT NULL
 );
 
 CREATE TABLE atendimento (
