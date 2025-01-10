@@ -8,7 +8,7 @@ const authController = {
       const user = await usuarios.findOne({ where: { email } });
 
       if (!user || !(await bcrypt.compare(senha, user.senha))) {
-        return res.render('index', { errorMessage: 'Senha ou email incorretos' });
+        return res.render('index', { errorMessage: 'Usuário ou senha incorretos' });
       }
 
       req.session.userId = user.id;

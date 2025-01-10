@@ -3,21 +3,32 @@ const Cliente = require('../models/clienteModel');
 const clienteController = {
     createCliente: async (req, res) => {
         try {
+            console.log(req.body);
+            const genero = req.body.genero;
             const newCliente = {
                 nome: req.body.nome,
                 cpf: req.body.cpf,
+                genero,
                 datanasc: req.body.datanasc,
-                codgenero: req.body.codgenero,
-                endereco: req.body.endereco,
-                codatend: req.body.codatend,
+                cidade: req.body.cidade,
+                estado: req.body.estado,
+                bairro: req.body.bairro,
+                rua: req.body.rua,
+                numero: parseInt(req.body.numero, 10),
+                cep: req.body.cep,
+                telefone: req.body.telefone,
+                userId: req.session.userId
             };
 
+            console.log(newCliente)
+    
             const cliente = await Cliente.create(newCliente);
-            res.status(201).json(cliente);
+            res.redirect('/dashboard/cadastro')
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
     },
+    
 
     getClienteById: async (req, res) => {
         try {
@@ -36,36 +47,37 @@ const clienteController = {
 
     getAllClientes: async (req, res) => {
         try {
-            const clientes = await Cliente.findAll();
+            const userId = req.session.userId; 
+    
+            if (!userId) {
+                return res.status(401).json({ message: 'Usuário não autenticado' });
+            }
+    
+            const clientes = await Cliente.findAll({
+                where: { userId },
+            });
+    
             res.status(200).json(clientes);
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
     },
 
-    getAllClientesData: async () => {
-        try {
-            const clientes = await Cliente.findAll();
-            return clientes.map(cliente => ({
-                nome: cliente.nome,
-                dadosPessoais: cliente.cpf,
-                descricao: `Endereço: ${cliente.rua}, ${cliente.numero}, ${cliente.bairro}, ${cliente.cidade}, ${cliente.uf}, CEP: ${cliente.cep}`
-            }));
-        } catch (err) {
-            throw new Error('Erro ao buscar clientes: ' + err.message);
-        }
-    },
-
     updateCliente: async (req, res) => {
         try {
-            const clienteId = req.params.id;
+            const clienteId = req.body.id;
             const updatedCliente = {
                 nome: req.body.nome,
                 cpf: req.body.cpf,
+                genero: req.body.genero,
                 datanasc: req.body.datanasc,
-                codgenero: req.body.codgenero,
-                endereco: req.body.endereco,
-                codatend: req.body.codatend,
+                cidade: req.body.cidade,
+                estado: req.body.estado,
+                bairro: req.body.bairro,
+                rua: req.body.rua,
+                numero: parseInt(req.body.numero, 10),
+                cep: req.body.cep,
+                telefone: req.body.telefone,
             };
 
             const [updated] = await Cliente.update(updatedCliente, {
@@ -73,11 +85,13 @@ const clienteController = {
             });
 
             if (!updated) {
-                return res.status(404).json({ message: 'Cliente não encontrado' });
+                res.status(404).json({ message: 'Cliente não encontrado' });
+                res.redirect('/dashboard/cadastro');
+                return;
             }
 
             const cliente = await Cliente.findByPk(clienteId);
-            res.status(200).json(cliente);
+            res.redirect('/dashboard/cadastro')
         } catch (err) {
             res.status(500).json({ error: err.message });
         }

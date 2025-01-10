@@ -4,77 +4,155 @@
         <nav>
             <a href="/dashboard">PROCEDIMENTOS</a>
             <a href="/dashboard/agenda">AGENDA</a>
-            <a href="/dashboard/cadastro">CADASTROS</a>
+            <a href="/dashboard/cadastro">CADASTRO</a>
         </nav>
     </header>
-    <main>
-        <!-- SE NÃO TIVER NENHUM CADASTRO: -->
-        <div class="modal" id="modal" style="display: none;">
-            <div class="cadastro-modal">
-                <div class="header">
-                    <div class="header-title">
-                        <h2>Cadastro de Clientes</h2>
-                    </div>
-                    <span onclick="fecharModal()">
-                        <i class="fa-solid fa-circle-xmark"></i>
-                    </span>
+    <div class="lista-clientes" id="lista-clientes">
+        <ul id="clientes-ul">
+            <!-- Os clientes serão adicionados aqui dinamicamente -->
+        </ul>
+    </div>
+    <div class="modal" id="modal-editar" style="display: none;">
+        <div class="cadastro-modal">
+            <div class="header">
+                <div class="header-title">
+                    <h2 >Editar Cliente</h2>
                 </div>
-                <hr>
-                <form class="box" method="POST" action="">
-                    <div class="form-group">
-                        <label for="nome">Nome do Cliente</label>
-                        <input type="text" name="nome" id="name" placeholder="Insira um nome">
-                    </div>
-                    <div class="form-group">
-                        <label for="datanasc">Data Nascimento</label>
-                        <input type="date" name="datanasc" id="datanasc">
-                    </div>
-                    <div class="form-group">
-                        <label for="cpf">CPF</label>
-                        <input type="text" name="cpf" id="cpf" placeholder="000.000.000-00">
-                    </div>
-                    <div class="form-group">
-                        <label for="genero">Gênero</label>
-                        <select name="genero" id="genero">
-                            <option value="masculino">Masculino</option>
-                            <option value="feminino">Feminino</option>
-                            <option value="outro">Outro</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="estado">Estado</label>
-                        <select id="estado" name="estado">
-                            <option value="">Selecione o Estado</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="cidade">Cidade</label>
-                        <select id="cidade" name="cidade">
-                            <option value="">Selecione a Cidade</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="bairro">Bairro</label>
-                        <input type="text" name="bairro" id="bairro">
-                    </div>
-                    <div class="form-group">
-                        <label for="rua">Rua</label>
-                        <input type="text" name="rua" id="rua">
-                    </div>
-                    <div class="form-group">
-                        <label for="numero">Número</label>
-                        <input type="number" name="numero" id="numero" min="0" max="9999" step="1">
-                    </div>
-                    <div class="form-group">
-                        <label for="cep">CEP</label>
-                        <input type="text" name="cep" id="cep">
-                    </div>
-                    <button type="submit" class="btn">Entrar</button>
-                </form>
+                <span onclick="fecharModalEditar()">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </span>
             </div>
-        </div>
 
-        <button onclick="abrirModal()">Adicionar Cliente</button>
+            <form class="box" method="POST" action="/clientes/editar" id="form-editar">
+                <div class="form-group">
+                    <label for="name-editar">Nome do Cliente</label>
+                    <input type="text" name="nome" id="name-editar" required>
+                </div>
+                <div class="form-group">
+                    <label for="datanasc-editar">Data de Nascimento</label>
+                    <input type="date" name="datanasc" id="datanasc-editar" required>
+                </div>
+                <div class="form-group">
+                    <label for="cpf-editar">CPF</label>
+                    <input type="text" name="cpf" id="cpf-editar" required>
+                </div>
+                <div class="form-group">
+                    <label for="genero-editar">Gênero</label>
+                    <select name="genero" id="genero-editar" required>
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="estado-editar">Estado</label>
+                    <input type="text" name="estado" id="estado-editar" required>
+                </div>
+                <div class="form-group">
+                    <label for="cidade-editar">Cidade</label>
+                    <input type="text" name="cidade" id="cidade-editar" required>
+                </div>
+                <div class="form-group">
+                    <label for="bairro-editar">Bairro</label>
+                    <input type="text" name="bairro" id="bairro-editar" required>
+                </div>
+                <div class="form-group">
+                    <label for="rua-editar">Rua</label>
+                    <input type="text" name="rua" id="rua-editar" required>
+                </div>
+                <div class="form-group">
+                    <label for="numero-editar">Número</label>
+                    <input type="number" name="numero" id="numero-editar" required>
+                </div>
+                <div class="form-group">
+                    <label for="cep-editar">CEP</label>
+                    <input type="text" name="cep" id="cep-editar" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefone-editar">Telefone</label>
+                    <input type="text" name="telefone" id="telefone-editar" required>
+                </div>
+                <input type="hidden" id="id-editar" name="id">
+                <button type="submit" class="btn">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="modal" id="modal" style="display: none;">
+        <div class="cadastro-modal">
+            <div class="header">
+                <div class="header-title">
+                    <h2>Cadastro de Clientes</h2>
+                </div>
+                <span onclick="fecharModal()">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </span>
+            </div>
+
+            <form class="box" method="POST" action="/clientes/cadastro">
+                <div class="form-group">
+                    <label for="nome">Nome do Cliente</label>
+                    <input type="text" name="nome" id="name" placeholder="Insira um nome">
+                </div>
+                <div class="form-group">
+                    <label for="datanasc">Data Nascimento</label>
+                    <input type="date" name="datanasc" id="datanasc">
+                </div>
+                <div class="form-group">
+                    <label for="cpf">CPF</label>
+                    <input type="text" name="cpf" id="cpf" placeholder="000.000.000-00">
+                </div>
+                <div class="form-group">
+                    <label for="genero">Gênero</label>
+                    <select name="genero" id="genero" required>
+                        <option value="" disabled selected>Selecione o gênero</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <select id="estado" name="estado">
+                        <option value="">Selecione o Estado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cidade">Cidade</label>
+                    <select id="cidade" name="cidade">
+                        <option value="">Selecione a Cidade</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="bairro">Bairro</label>
+                    <input type="text" name="bairro" id="bairro" placeholder="Insira seu bairro">
+                </div>
+                <div class="form-group">
+                    <label for="rua">Rua</label>
+                    <input type="text" name="rua" id="rua" placeholder="Insira sua rua">
+                </div>
+                <div class="form-group">
+                    <label for="numero">Número</label>
+                    <input type="number" name="numero" id="numero" min="0" max="9999" step="1"
+                        placeholder="numero da casa">
+                </div>
+                <div class="form-group">
+                    <label for="cep">CEP</label>
+                    <input type="text" name="cep" id="cep" placeholder="00000-000">
+                </div>
+                <div class="form-group">
+                    <label for="telefone">Telefone</label>
+                    <input type="text" name="telefone" id="telefone" placeholder="Insira seu contato">
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+
+            </form>
+        </div>
+    </div>
+
+    <button class="adicionar-btn" onclick="abrirModal()">Adicionar cliente +</button>
+
     </main>
 </div>
 
@@ -86,4 +164,169 @@
     const fecharModal = () => {
         document.getElementById('modal').style.display = "none";
     };
+
+    const fecharModalEditar = () => {
+        document.getElementById('modal-editar').style.display = 'none';
+    };
+
+    async function obterEstados() {
+        try {
+            const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
+            if (!response.ok) throw new Error('Erro ao obter estados');
+            const estados = await response.json();
+            return estados;
+        } catch (err) {
+            console.error(err.message);
+            return [];
+        }
+    }
+
+    // Função para obter o nome do estado baseado no ID
+    async function obterNomeEstado(idEstado) {
+        const estados = await obterEstados();
+        const estado = estados.find(estado => estado.id === idEstado);
+        return estado ? estado.nome : 'Estado não encontrado'; // Retorna o nome ou fallback
+    }
+
+
+    const carregarClientes = async () => {
+        try {
+            const response = await fetch('/clientes'); // Endpoint para buscar clientes
+            if (!response.ok) throw new Error('Erro ao buscar clientes');
+
+            const clientes = await response.json();
+
+            const lista = document.getElementById('clientes-ul');
+            lista.innerHTML = ''; // Limpa a lista antes de renderizar
+
+
+
+            clientes.forEach(async cliente => {
+                const item = document.createElement('li');
+                const data = new Date(cliente.datanasc);
+
+                const nomeEstado = await obterNomeEstado(cliente.estado);
+
+                item.innerHTML = `
+        <div class="dados-container" id="dados-container-${cliente.id}">
+          <div class="header">
+            <span><i class="fa-solid fa-circle-user"></i></span>
+            <h2 class="nome-cadastro">${cliente.nome}</h2>
+          </div>
+          <div class="informacoes" id="informacoes-${cliente.id}" style="display: none;">
+            <p><strong>CPF:</strong> ${cliente.cpf}</p>
+            <p><strong>Data de Nascimento:</strong> ${data.toLocaleDateString()}</p>
+            <p><strong>Gênero:</strong> ${cliente.genero}</p>
+            <p><strong>Endereço:</strong> ${cliente.rua}, ${cliente.numero}, ${cliente.bairro}, ${cliente.cidade}, ${nomeEstado}</p>
+            <p><strong>CEP:</strong> ${cliente.cep}</p>
+            <p><strong>SESSÔES:</strong> ${cliente.sessoes}</p>
+          </div>
+          <button class="toggle-btn" onclick="toggleInformacoes(${cliente.id})">Mostrar Informações</button>
+          <button class="edit-btn" onclick="editarCliente(${cliente.id})">Editar</button>
+          <button class="delete-btn" onclick="excluirCliente(${cliente.id})">Excluir</button>
+        </div>
+      `;
+                lista.appendChild(item);
+            });
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    const excluirCliente = async (id) => {
+        try {
+            const response = await fetch(`/clientes/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Erro ao excluir cliente');
+
+            alert('Cliente excluído com sucesso!');
+            carregarClientes();  // Atualizar a lista de clientes após a exclusão
+        } catch (err) {
+            console.error(err.message);
+            alert('Erro ao excluir cliente.');
+        }
+    };
+
+    const editarCliente = async (id) => {
+        try {
+            const response = await fetch(`/clientes/${id}`);
+            if (!response.ok) throw new Error('Erro ao buscar dados do cliente');
+
+            const cliente = await response.json();
+
+            document.getElementById('modal-editar').style.display = 'flex';  // Mostrar modal de edição
+
+            // Preencher os campos de edição com os dados do cliente
+            document.getElementById('name-editar').value = cliente.nome;
+            document.getElementById('datanasc-editar').value = cliente.datanasc;
+            document.getElementById('cpf-editar').value = cliente.cpf;
+            document.getElementById('genero-editar').value = cliente.genero;
+            document.getElementById('estado-editar').value = cliente.estado;
+            document.getElementById('cidade-editar').value = cliente.cidade;
+            document.getElementById('bairro-editar').value = cliente.bairro;
+            document.getElementById('rua-editar').value = cliente.rua;
+            document.getElementById('numero-editar').value = cliente.numero;
+            document.getElementById('cep-editar').value = cliente.cep;
+            document.getElementById('telefone-editar').value = cliente.telefone;
+            document.getElementById('id-editar').value = cliente.id;  // Preencher com o ID
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    const salvarEdicaoCliente = async () => {
+        const id = document.getElementById('id-editar').value;
+        const cliente = {
+            nome: document.getElementById('name-editar').value,
+            datanasc: document.getElementById('datanasc-editar').value,
+            cpf: document.getElementById('cpf-editar').value,
+            genero: document.getElementById('genero-editar').value,
+            estado: document.getElementById('estado-editar').value,
+            cidade: document.getElementById('cidade-editar').value,
+            bairro: document.getElementById('bairro-editar').value,
+            rua: document.getElementById('rua-editar').value,
+            numero: document.getElementById('numero-editar').value,
+            cep: document.getElementById('cep-editar').value,
+            telefone: document.getElementById('telefone-editar').value
+        };
+
+        try {
+            const response = await fetch(`/clientes/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cliente)
+            });
+
+            if (!response.ok) throw new Error('Erro ao editar cliente');
+
+            alert('Cliente atualizado com sucesso!');
+            carregarClientes();  // Atualizar lista de clientes
+            fecharModalEditar();  // Fechar a modal de edição
+        } catch (err) {
+            console.error(err.message);
+            alert('Erro ao editar cliente.');
+        }
+    };
+
+
+    document.addEventListener('DOMContentLoaded', carregarClientes);
+
+</script>
+
+<script>
+    const toggleInformacoes = (id) => {
+        const informacoes = document.getElementById('informacoes-' + id);
+        const botao = document.querySelector('#dados-container-' + id + ' .toggle-btn');
+
+        if (informacoes.style.display === 'none' || informacoes.style.display === '') {
+            informacoes.style.display = 'block';
+            botao.textContent = 'Ocultar Informações';
+        } else {
+            informacoes.style.display = 'none';
+            botao.textContent = 'Mostrar Informações';
+        }
+    };
+
+
+
+
 </script>

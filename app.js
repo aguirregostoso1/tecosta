@@ -8,6 +8,7 @@ const userRoutes = require('./routes/usuariosRoutes');
 const produtoRoutes = require('./routes/produtoRoutes');
 const atendimentoRoutes = require('./routes/atendimentoRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes')
+const clientesRoutes = require('./routes/clientesRoutes')
 
 const path = require('path')
 
@@ -58,6 +59,7 @@ app.use('/usuarios', requireAuth, userRoutes);
 app.use('/produtos', requireAuth, produtoRoutes);
 app.use('/atendimentos',requireAuth, atendimentoRoutes);
 app.use('/dashboard', requireAuth, dashboardRoutes)
+app.use('/clientes', requireAuth, clientesRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

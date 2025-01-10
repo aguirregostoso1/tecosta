@@ -1,13 +1,15 @@
 var express = require('express');
 var router = express.Router();
+var clienteController = require('../controllers/clienteController')
 
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+router.post('/cadastro', clienteController.createCliente)
 
-router.get('/clientes', function(req,res) {
-  res.render('clientes');
-});
+router.get('/', clienteController.getAllClientes);
+
+router.post('/editar/', clienteController.updateCliente);
+
+router.get('/:id', clienteController.getClienteById);
+
+router.delete('/:id', clienteController.deleteCliente);
 
 module.exports = router;
-

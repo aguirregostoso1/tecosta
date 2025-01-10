@@ -1,10 +1,303 @@
 <div class="container-main">
   <header>
-      <img src="../images/logo.png" alt="Logo">
+    <img src="../images/logo.png" alt="Logo">
     <nav>
-        <a href="/dashboard">PROCEDIMENTOS</a>
-        <a href="/dashboard/agenda">AGENDA</a>
-        <a href="/dashboard/cadastro">CADASTROS</a>
+      <a href="/dashboard">PROCEDIMENTOS</a>
+      <a href="/dashboard/agenda">AGENDA</a>
+      <a href="/dashboard/cadastro">CADASTROS</a>
     </nav>
-</header>
+  </header>
+
+  <div class="lista-atendimentos" id="lista-atendimentos">
+    <ul id="atendimentos-ul">
+      <!-- Os atendimentos serão adicionados aqui dinamicamente -->
+    </ul>
+  </div>
+
+  <div class="modal" id="modal-editar" style="display: none;">
+    <div class="cadastro-modal">
+      <div class="header">
+        <div class="header-title">
+          <h2>Editar Atendimento</h2>
+        </div>
+        <span onclick="fecharModalEditar()">
+          <i class="fa-solid fa-circle-xmark"></i>
+        </span>
+      </div>
+
+      <form class="box" method="post" action="/atendimentos/editar" id="form-editara">
+        <div class="form-group">
+          <label for="cliente-editar">Cliente</label>
+          <select name="cliente" id="cliente-editar" required>
+            <option value="" disabled>Selecione o cliente</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="dia-editar">Data</label>
+          <input type="date" name="dia" id="dia-editar" required>
+        </div>
+        <div class="form-group">
+          <label for="hora-editar">Horário</label>
+          <input type="time" name="hora" id="hora-editar" required>
+        </div>
+        <div class="form-group">
+          <label for="procedimento-editar">Procedimento</label>
+          <select name="procedimento" id="procedimento-editar" required>
+            <option value="" disabled selected>Selecione o procedimento</option>
+            <option value="terapiaortomolecular">TERAPIA ORTOMOLECULAR</option>
+            <option value="criomodelagem">CRIOMODELAGEM</option>
+            <option value="renatafranca">RENATA FRANÇA</option>
+            <option value="ozonioterapia">OZONIOTERAPIA</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="vcobrado-editar">Valor Cobrado</label>
+          <input type="number" name="vcobrado" id="vcobrado-editar" step="0.01" placeholder="R$" required>
+        </div>
+        <div class="form-group">
+          <label for="formapag-editar">Forma de Pagamento</label>
+          <select name="formapag" id="formapag-editar" required>
+            <option value="" disabled selected>Selecione a forma de pagamento</option>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="cartao">Cartão</option>
+            <option value="pix">PIX</option>
+          </select>
+        </div>
+        <input type="id" value="" id="id" name="id" hidden>
+        <button type="submit" class="btn">Salvar Alterações</button>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="modal" id="modal" style="display: none;">
+    <div class="cadastro-modal">
+      <div class="header">
+        <div class="header-title">
+          <h2>Cadastro de Atendimentos</h2>
+        </div>
+        <span onclick="fecharModal()">
+          <i class="fa-solid fa-circle-xmark"></i>
+        </span>
+      </div>
+
+      <form class="box" method="POST" action="/atendimentos/" id="form-cadastro">
+        <div class="form-group">
+          <label for="cliente">Cliente</label>
+          <select name="cliente" id="cliente" required>
+            <option value="" disabled selected>Selecione o cliente</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="dia">Data</label>
+          <input type="date" name="dia" id="dia" required>
+        </div>
+        <div class="form-group">
+          <label for="hora">Horário</label>
+          <input type="time" name="hora" id="hora" required>
+        </div>
+        <div class="form-group">
+          <label for="procedimento">Procedimento</label>
+          <select name="procedimento" id="procedimento" required>
+            <option value="" disabled selected>Selecione o procedimento</option>
+            <option value="terapiaortomolecular">TERAPIA ORTOMOLECULAR</option>
+            <option value="criomodelagem">CRIOMODELAGEM</option>
+            <option value="renatafranca">RENATA FRANÇA</option>
+            <option value="ozonioterapia">OZONIOTERAPIA</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="vcobrado">Valor Cobrado</label>
+          <input type="number" name="vcobrado" id="vcobrado" step="0.01" placeholder="R$" required>
+        </div>
+        <div class="form-group">
+          <label for="formapag">Forma de Pagamento</label>
+          <select name="formapag" id="formapag" required>
+            <option value="" disabled selected>Selecione a forma de pagamento</option>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="cartao">Cartão</option>
+            <option value="pix">PIX</option>
+          </select>
+        </div>
+        <button type="submit" class="btn">Cadastrar Atendimento</button>
+      </form>
+    </div>
+  </div>
+
+  <button class="adicionar-btn" onclick="abrirModal()">Adicionar Atendimento +</button>
 </div>
+
+<script>
+  const abrirModal = () => {
+    document.getElementById('modal').style.display = 'flex';
+    carregarClientes(); 
+  };
+
+  const carregarClientesEditar = async (clienteId) => {
+    try {
+      const response = await fetch('/clientes');
+      if (!response.ok) throw new Error('Erro ao buscar clientes');
+
+      const clientes = await response.json();
+      const select = document.getElementById('cliente-editar');
+      select.innerHTML = '<option value="" disabled>Selecione o cliente</option>';
+
+      clientes.forEach(cliente => {
+        const option = document.createElement('option');
+        option.value = cliente.id;
+        option.textContent = cliente.nome;
+        if (cliente.id === clienteId) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      });
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  // Função para fechar a modal de edição
+  const fecharModalEditar = () => {
+    document.getElementById('modal-editar').style.display = 'none';
+  };
+
+  const fecharModal = () => {
+    document.getElementById('modal').style.display = 'none';
+    document.getElementById('form-cadastro').reset();
+  };
+
+  const carregarClientes = async () => {
+    try {
+      const response = await fetch('/clientes');
+      if (!response.ok) throw new Error('Erro ao buscar clientes');
+
+      const clientes = await response.json();
+      const select = document.getElementById('cliente');
+      select.innerHTML = '<option value="" disabled selected>Selecione o cliente</option>';
+
+      clientes.forEach(cliente => {
+        const option = document.createElement('option');
+        option.value = cliente.id;
+        option.textContent = cliente.nome;
+        select.appendChild(option);
+      });
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  const carregarAtendimentos = async () => {
+    try {
+      const response = await fetch('/atendimentos');
+      if (!response.ok) throw new Error('Erro ao buscar atendimentos');
+
+      const atendimentos = await response.json();
+      const lista = document.getElementById('atendimentos-ul');
+      lista.innerHTML = '';
+
+      // Buscar os clientes antes de exibir a lista de atendimentos
+      const clientesResponse = await fetch('/clientes');
+      if (!clientesResponse.ok) throw new Error('Erro ao buscar clientes');
+      const clientes = await clientesResponse.json();
+
+      atendimentos.forEach(async atendimento => {
+        const item = document.createElement('li');
+        const data = new Date(atendimento.dia);
+
+        // Buscar o nome do cliente com base no ID
+        const cliente = clientes.find(cliente => cliente.id == atendimento.cliente);
+        const nomeCliente = cliente.nome;  // Caso o cliente não seja encontrado
+
+        item.innerHTML = `
+       <div class="container-pai">
+         <div class="csscontainer">
+          <div class="header">
+            <span><i class="fa-solid fa-calendar"></i></span>
+            <h2 class="nome-agenda" >${nomeCliente}</h2>  <!-- Exibe o nome do cliente -->
+          </div>
+          <div class="informacoes" id="informacoes-${atendimento.id}" style="display: none;">
+            <p><strong>Data:</strong> ${data.toLocaleDateString()}</p>
+            <p><strong>Horário:</strong> ${atendimento.hora}</p>
+            <p><strong>Procedimento:</strong> ${atendimento.procedimento}</p>
+            <p><strong>Valor Cobrado:</strong> R$${atendimento.vcobrado}</p>
+            <p><strong>Forma de Pagamento:</strong> ${atendimento.formapag}</p>
+          </div>
+          <button class="toggle-btn" onclick="toggleInformacoes(${atendimento.id})">Mostrar Informações</button>
+          <button class="edit-btnagenda" onclick="editarAtendimento(${atendimento.id})">Editar</button>
+          <button class="mark-complete-btn" onclick="marcarComoAtendido(${atendimento.id})">Marcar como Atendido</button>
+          <button class="delete-btnagenda" onclick="excluirAtendimento(${atendimento.id})">Excluir</button>
+        </div>
+      `;
+        lista.appendChild(item);
+      });
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+
+  const excluirAtendimento = async (id) => {
+    try {
+      const response = await fetch(`/atendimentos/${id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Erro ao excluir atendimento');
+
+      alert('Atendimento excluído com sucesso!');
+      carregarAtendimentos();
+    } catch (err) {
+      console.error(err.message);
+      alert('Erro ao excluir atendimento.');
+    }
+  };
+
+  const toggleInformacoes = (id) => {
+    const informacoes = document.getElementById('informacoes-' + id);
+    const botao = document.querySelector(`#informacoes-${id} + .toggle-btn`);
+    if (informacoes.style.display === 'none' || informacoes.style.display === '') {
+      informacoes.style.display = 'block';
+      botao.textContent = 'Ocultar Informações';
+    } else {
+      informacoes.style.display = 'none';
+      botao.textContent = 'Mostrar Informações';
+    }
+  };
+
+  const editarAtendimento = async (id) => {
+    try {
+      // Buscar o atendimento pelo ID
+      const response = await fetch(`/atendimentos/${id}`);
+      if (!response.ok) throw new Error('Erro ao buscar atendimento');
+
+      const atendimento = await response.json();
+      document.getElementById('modal-editar').style.display = 'flex';
+
+      // Preencher os campos da modal de edição com os dados do atendimento
+      document.getElementById('dia-editar').value = atendimento.dia;
+      document.getElementById('hora-editar').value = atendimento.hora;
+      document.getElementById('procedimento-editar').value = atendimento.procedimento;
+      document.getElementById('vcobrado-editar').value = atendimento.vcobrado;
+      document.getElementById('formapag-editar').value = atendimento.formapag;
+      document.getElementById('id').value = atendimento.id;
+
+      await carregarClientesEditar(atendimento.cliente);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  
+
+
+  const marcarComoAtendido = async (id) => {
+    try {
+      const response = await fetch(`/atendimentos/${id}/atendido`, { method: 'POST' });
+      if (!response.ok) throw new Error('Erro ao marcar como atendido');
+
+      alert('Atendimento marcado como atendido!');
+      carregarAtendimentos();
+    } catch (err) {
+      console.error(err.message);
+      alert('Erro ao marcar atendimento como atendido.');
+    }
+  };
+  document.addEventListener('DOMContentLoaded', carregarAtendimentos);
+</script>

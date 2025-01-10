@@ -4,16 +4,14 @@ const router = express.Router();
 
 router.get('/', atendimentoController.getAllAtendimentos);
 
-router.get('/new', atendimentoController.renderCreateForm);
-
 router.post('/', atendimentoController.createAtendimento);
 
 router.get('/:id', atendimentoController.getAtendimentoById);
 
-router.get('/:id/edit', atendimentoController.renderEditForm);
-
-router.put('/:id', atendimentoController.updateAtendimento);
+router.post('/editar', atendimentoController.updateAtendimento);
 
 router.delete('/:id', atendimentoController.deleteAtendimento);
+
+router.post('/:id/atendido', atendimentoController.atendidos)
 
 module.exports = router;
